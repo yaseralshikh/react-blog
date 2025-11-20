@@ -9,6 +9,7 @@ import { AuthPage } from './pages/Auth';
 import { Dashboard } from './pages/Dashboard';
 import { Editor } from './pages/Editor';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { ToastContainer } from './components/Toast';
 
 // Scroll to top on route change wrapper
 const ScrollToTop = () => {
@@ -21,7 +22,7 @@ const ScrollToTop = () => {
 
 const AppContent: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 dark:bg-gradient-to-br dark:from-[#0b1220] dark:via-[#0d1426] dark:to-[#0a0f1c] dark:text-slate-100 transition-colors">
       <ScrollToTop />
       <Navbar />
       <Routes>
@@ -43,6 +44,7 @@ const App: React.FC = () => {
     <AuthProvider>
       <Router>
         <AppContent />
+        <ToastContainer position="top-right" theme="colored" closeOnClick newestOnTop pauseOnHover={false} />
       </Router>
     </AuthProvider>
   );

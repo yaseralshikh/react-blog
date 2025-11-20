@@ -56,32 +56,32 @@ export const Home: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-transparent">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-20 bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen pb-20 bg-slate-50/80 dark:bg-transparent">
       {/* Hero Section */}
-      <header className="relative bg-slate-900 text-white py-20 overflow-hidden mb-12">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80')] bg-cover bg-center opacity-20"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900/90"></div>
+      <header className="relative bg-gradient-to-br from-white via-slate-50 to-slate-100 text-slate-900 dark:from-[#0b1220] dark:via-[#0d1426] dark:to-[#0a0f1c] dark:text-white py-20 overflow-hidden mb-12 shadow-2xl shadow-brand-500/10">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80')] bg-cover bg-center opacity-10 dark:opacity-25"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/80 to-slate-50/95 dark:from-transparent dark:via-[#0f172a]/70 dark:to-[#0b1220]/95"></div>
         <div className="container relative mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-            Share Your <span className="text-brand-400">Code</span> & Ideas
+            Share Your <span className="text-brand-500">Code</span> & Ideas
           </h1>
           <div className="max-w-xl mx-auto relative group">
             <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-slate-400 group-focus-within:text-brand-400 transition-colors" />
+              <Search className="h-5 w-5 text-slate-400 group-focus-within:text-brand-500 transition-colors" />
             </div>
             <input
               type="text"
               placeholder="Search articles..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-slate-900/80 transition-all shadow-xl"
+              className="w-full pl-14 pr-6 py-4 rounded-full bg-white border border-slate-200 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:bg-white transition-all shadow-xl dark:bg-white/20 dark:border-white/30 dark:text-white dark:placeholder-slate-200 dark:focus:bg-white/15"
             />
           </div>
         </div>
@@ -94,7 +94,7 @@ export const Home: React.FC = () => {
           <aside className="lg:w-1/4 space-y-8">
             {/* Active Filters Badge */}
             {(selectedCategory || selectedDate) && (
-              <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-brand-200 dark:border-brand-900/50">
+              <div className="bg-white/95 dark:bg-slate-800/80 backdrop-blur-xl p-4 rounded-2xl shadow-sm border border-brand-200 dark:border-brand-700/70">
                 <div className="flex justify-between items-center mb-2">
                   <h3 className="font-bold text-brand-600 dark:text-brand-400">Active Filters</h3>
                   <button onClick={clearFilters} className="text-xs text-slate-500 hover:text-red-500 flex items-center">
@@ -119,14 +119,14 @@ export const Home: React.FC = () => {
             )}
 
             {/* Categories Widget */}
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+            <div className="bg-white/95 dark:bg-slate-800/80 backdrop-blur-lg p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/70">
               <h3 className="flex items-center font-bold text-lg mb-4 text-slate-900 dark:text-white">
                 <Tag size={20} className="mr-2 text-brand-500" /> Categories
               </h3>
               <div className="space-y-2">
                 <button 
                   onClick={() => setSelectedCategory(null)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${!selectedCategory ? 'bg-slate-100 dark:bg-slate-700 font-medium' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-600 dark:text-slate-400'}`}
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${!selectedCategory ? 'bg-slate-100 dark:bg-slate-700/70 font-medium text-slate-900 dark:text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700/40 text-slate-600 dark:text-slate-200'}`}
                 >
                   All Categories
                 </button>
@@ -134,7 +134,7 @@ export const Home: React.FC = () => {
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors flex justify-between items-center ${selectedCategory === cat.id ? 'bg-brand-50 dark:bg-brand-900/20 text-brand-700 dark:text-brand-300 font-medium' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-600 dark:text-slate-400'}`}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors flex justify-between items-center ${selectedCategory === cat.id ? 'bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-200 font-medium' : 'hover:bg-slate-50 dark:hover:bg-slate-700/40 text-slate-600 dark:text-slate-200'}`}
                   >
                     <span>{cat.name}</span>
                     {selectedCategory === cat.id && <span className="w-2 h-2 rounded-full bg-brand-500"></span>}
@@ -144,14 +144,14 @@ export const Home: React.FC = () => {
             </div>
 
             {/* Archives Widget */}
-            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+            <div className="bg-white/95 dark:bg-slate-800/80 backdrop-blur-lg p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700/70">
               <h3 className="flex items-center font-bold text-lg mb-4 text-slate-900 dark:text-white">
                 <Calendar size={20} className="mr-2 text-brand-500" /> Archives
               </h3>
               <div className="space-y-2">
                  <button 
                   onClick={() => setSelectedDate(null)}
-                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${!selectedDate ? 'bg-slate-100 dark:bg-slate-700 font-medium' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-600 dark:text-slate-400'}`}
+                  className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${!selectedDate ? 'bg-slate-100 dark:bg-slate-700/70 font-medium text-slate-900 dark:text-white' : 'hover:bg-slate-50 dark:hover:bg-slate-700/40 text-slate-600 dark:text-slate-200'}`}
                 >
                   All Dates
                 </button>
@@ -159,7 +159,7 @@ export const Home: React.FC = () => {
                   <button
                     key={dateStr}
                     onClick={() => setSelectedDate(dateStr)}
-                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedDate === dateStr ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 font-medium' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-600 dark:text-slate-400'}`}
+                    className={`w-full text-left px-3 py-2 rounded-lg transition-colors ${selectedDate === dateStr ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-200 font-medium' : 'hover:bg-slate-50 dark:hover:bg-slate-700/40 text-slate-600 dark:text-slate-200'}`}
                   >
                     {dateStr}
                   </button>
@@ -180,7 +180,7 @@ export const Home: React.FC = () => {
             {filteredPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredPosts.map((post) => (
-                  <Link to={`/post/${post.id}`} key={post.id} className="group bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-brand-500/10 transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex flex-col h-full border border-slate-100 dark:border-slate-700">
+                  <Link to={`/post/${post.id}`} key={post.id} className="group bg-white/95 dark:bg-slate-800/85 rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-brand-500/10 transition-all duration-300 overflow-hidden transform hover:-translate-y-2 flex flex-col h-full border border-slate-100 dark:border-slate-600/70 backdrop-blur">
                     {post.image && (
                       <div className="h-48 overflow-hidden relative">
                         <div className="absolute inset-0 bg-slate-900/0 group-hover:bg-slate-900/10 transition-colors z-10"></div>
@@ -201,7 +201,7 @@ export const Home: React.FC = () => {
                     )}
                     
                     <div className="p-6 flex flex-col flex-grow">
-                      <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 mb-3 space-x-4">
+                      <div className="flex items-center text-xs text-slate-500 dark:text-slate-300 mb-3 space-x-4">
                         <span className="flex items-center"><Clock size={14} className="mr-1" /> {new Date(post.created_at).toLocaleDateString()}</span>
                         <span className="flex items-center"><MessageCircle size={14} className="mr-1" /> {post.comments_count || 0}</span>
                       </div>
@@ -210,11 +210,11 @@ export const Home: React.FC = () => {
                         {post.title}
                       </h2>
                       
-                      <p className="text-slate-600 dark:text-slate-300 text-sm line-clamp-3 mb-6 flex-grow">
+                      <p className="text-slate-600 dark:text-slate-200 text-sm line-clamp-3 mb-6 flex-grow">
                         {post.content}
                       </p>
                       
-                      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700">
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-700/70">
                         <div className="flex items-center space-x-2">
                           {post.author?.avatar ? (
                             <img src={post.author.avatar} alt={post.author.name} className="w-8 h-8 rounded-full border border-slate-200 dark:border-slate-600" />
@@ -234,12 +234,12 @@ export const Home: React.FC = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
-                <div className="bg-slate-100 dark:bg-slate-700 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="text-center py-20 bg-white/95 dark:bg-slate-800/85 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-600/70 backdrop-blur">
+                <div className="bg-slate-100 dark:bg-slate-700/80 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Filter className="text-slate-400 h-10 w-10" />
                 </div>
                 <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">No matching posts</h3>
-                <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
+                <p className="text-slate-500 dark:text-slate-300 max-w-md mx-auto mb-6">
                   We couldn't find any articles matching your filters.
                 </p>
                 <button onClick={clearFilters} className="text-brand-600 font-medium hover:underline">

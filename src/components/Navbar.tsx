@@ -1,21 +1,52 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, PenSquare, LogOut, User as UserIcon, Terminal, Shield } from 'lucide-react';
+import { Menu, X, PenSquare, LogOut, User as UserIcon, Terminal, Shield, Sun, Moon } from 'lucide-react';
+import { toast } from './Toast';
+import { setThemeClass, type ThemeMode } from '../utils/theme';
 
 export const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+  });
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+    toast.info('You have been signed out');
   };
 
+  const applyTheme = (mode: ThemeMode) => {
+    setTheme(mode);
+    setThemeClass(mode);
+    localStorage.setItem('devpulse_theme', mode);
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem('devpulse_theme') as ThemeMode | null;
+    const systemPrefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initial = stored || (systemPrefersDark ? 'dark' : 'light');
+    applyTheme(initial);
+
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const handleMediaChange = (event: MediaQueryListEvent) => {
+      const saved = localStorage.getItem('devpulse_theme');
+      if (!saved) {
+        applyTheme(event.matches ? 'dark' : 'light');
+      }
+    };
+    media.addEventListener('change', handleMediaChange);
+    return () => media.removeEventListener('change', handleMediaChange);
+  }, []);
+
+  const toggleTheme = () => applyTheme(theme === 'dark' ? 'light' : 'dark');
+
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+    <nav className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-700/70 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2 text-brand-600 dark:text-brand-400 hover:opacity-80 transition-opacity">
@@ -28,6 +59,14 @@ export const Navbar: React.FC = () => {
           <Link to="/" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium transition-colors">
             Explore
           </Link>
+          <button
+            onClick={toggleTheme}
+            className="flex items-center space-x-2 rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-2 text-slate-600 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            <span className="text-xs font-semibold uppercase">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          </button>
           
           {user ? (
             <>
@@ -92,6 +131,13 @@ export const Navbar: React.FC = () => {
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-4 space-y-4">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center space-x-2 rounded-lg bg-slate-100 dark:bg-slate-800 px-3 py-2 text-slate-600 dark:text-slate-200 w-full justify-center"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            <span className="text-sm font-semibold">{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          </button>
           <Link to="/" onClick={() => setIsMenuOpen(false)} className="block text-slate-600 dark:text-slate-300 font-medium">Explore</Link>
           {user ? (
             <>

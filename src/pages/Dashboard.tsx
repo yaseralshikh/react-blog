@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { db } from '../services/mockDb';
 import type { Post } from '../types';
 import { Edit2, Trash2, Plus, FileText, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { toast } from '../components/Toast';
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -30,16 +31,21 @@ export const Dashboard: React.FC = () => {
   }, [user, navigate]);
 
   const handleDelete = async (postId: string) => {
-    if (window.confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-      await db.deletePost(postId);
-      setMyPosts(myPosts.filter(p => p.id !== postId));
-    }
+    toast.confirm('Delete this post? This action cannot be undone.', {
+      confirmLabel: 'Delete',
+      cancelLabel: 'Cancel',
+      onConfirm: async () => {
+        await db.deletePost(postId);
+        setMyPosts(myPosts.filter(p => p.id !== postId));
+        toast.success('Post deleted');
+      }
+    });
   };
 
   if (isLoading) return <div className="min-h-screen flex justify-center items-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div></div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-12">
+    <div className="min-h-screen bg-slate-50/90 dark:bg-transparent py-12">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="flex justify-between items-end mb-8">
           <div>
@@ -52,7 +58,7 @@ export const Dashboard: React.FC = () => {
           </Link>
         </div>
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white/95 dark:bg-slate-800/85 rounded-2xl shadow-lg border border-slate-100 dark:border-slate-600/70 overflow-hidden backdrop-blur">
           {myPosts.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="w-full text-left">

@@ -5,6 +5,7 @@ import { db } from '../services/mockDb';
 import type { Post, Comment } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { Clock, User, MessageSquare, Send, ArrowLeft } from 'lucide-react';
+import { toast } from '../components/Toast';
 
 export const PostDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,17 +34,25 @@ export const PostDetail: React.FC = () => {
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !newComment.trim() || !post) return;
+    if (!user) {
+      toast.info('Please sign in to comment.');
+      return;
+    }
+    if (!newComment.trim() || !post) {
+      toast.warn('Add a comment before posting.');
+      return;
+    }
 
     const comment = await db.createComment(newComment, post.id, user.id);
     setComments([...comments, comment]);
     setNewComment('');
+    toast.success('Comment added');
   };
 
-  if (isLoading || !post) return <div className="min-h-screen flex justify-center items-center bg-slate-50 dark:bg-slate-900"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div></div>;
+  if (isLoading || !post) return <div className="min-h-screen flex justify-center items-center bg-slate-50 dark:bg-transparent"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div></div>;
 
   return (
-    <div className="min-h-screen py-12 bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen py-12 bg-slate-50/80 dark:bg-transparent">
       <article className="container mx-auto px-4 max-w-4xl">
         <button onClick={() => navigate(-1)} className="flex items-center text-slate-500 hover:text-brand-600 mb-8 transition-colors">
           <ArrowLeft size={20} className="mr-2" /> Back to posts
@@ -99,7 +108,7 @@ export const PostDetail: React.FC = () => {
 
           {/* Comment Form */}
           {user ? (
-            <form onSubmit={handleCommentSubmit} className="mb-12 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+            <form onSubmit={handleCommentSubmit} className="mb-12 bg-white/95 dark:bg-slate-800/85 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-600/70 backdrop-blur">
               <div className="mb-4">
                 <div className="flex items-center space-x-3 mb-4">
                    {user.avatar ? (
@@ -112,7 +121,7 @@ export const PostDetail: React.FC = () => {
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all resize-none placeholder-slate-400 dark:placeholder-slate-500"
+                  className="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:outline-none transition-all resize-none placeholder-slate-400 dark:placeholder-slate-500"
                   rows={3}
                   placeholder="Share your thoughts on this topic..."
                 />
@@ -125,7 +134,7 @@ export const PostDetail: React.FC = () => {
               </div>
             </form>
           ) : (
-            <div className="bg-slate-100 dark:bg-slate-800 p-8 rounded-2xl mb-10 text-center border border-slate-200 dark:border-slate-700">
+            <div className="bg-slate-100/80 dark:bg-slate-800/80 p-8 rounded-2xl mb-10 text-center border border-slate-200 dark:border-slate-600/70 backdrop-blur">
               <p className="text-slate-600 dark:text-slate-300 mb-4">Join the conversation by signing in to your account.</p>
               <a href="/#/login" className="inline-block bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity">
                 Sign In to Comment
@@ -147,7 +156,7 @@ export const PostDetail: React.FC = () => {
                   )}
                 </div>
                 <div className="flex-grow">
-                  <div className="bg-white dark:bg-slate-800 p-5 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-700">
+                  <div className="bg-white/95 dark:bg-slate-800/85 p-5 rounded-2xl rounded-tl-none shadow-sm border border-slate-100 dark:border-slate-600/70 backdrop-blur">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-bold text-slate-900 dark:text-white text-sm">{comment.author?.name || 'Unknown User'}</h4>
                       <span className="text-xs text-slate-400">{new Date(comment.created_at).toLocaleDateString()}</span>

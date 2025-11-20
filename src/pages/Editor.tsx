@@ -5,6 +5,7 @@ import { db } from '../services/mockDb';
 import { useAuth } from '../context/AuthContext';
 import type { Category } from '../types';
 import { Save, ArrowLeft, Image as ImageIcon, Upload, X, AlertCircle } from 'lucide-react';
+import { toast } from '../components/Toast';
 
 export const Editor: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // If ID exists, it's edit mode
@@ -21,7 +22,7 @@ export const Editor: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Common style for inputs to ensure visibility
-  const inputStyle = "w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-brand-500 focus:border-transparent focus:outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-all";
+  const inputStyle = "w-full px-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-brand-500 focus:border-transparent focus:outline-none text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 transition-all";
 
   useEffect(() => {
     if (!user) {
@@ -67,7 +68,7 @@ export const Editor: React.FC = () => {
     if (file) {
       // Simple validation for file size (e.g., < 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("File is too large. Please select an image under 5MB.");
+        toast.error("File is too large. Please select an image under 5MB.");
         return;
       }
 
@@ -92,7 +93,7 @@ export const Editor: React.FC = () => {
     e.preventDefault();
     if (!user) return;
     if (!selectedCategoryId) {
-        alert("Please select a category.");
+        toast.warn("Please select a category.");
         return;
     }
 
@@ -107,6 +108,7 @@ export const Editor: React.FC = () => {
           image: imageUrl,
           category_id: selectedCategoryId 
         });
+        toast.success('Post updated');
         navigate(`/post/${id}`);
       } else {
         const newPost = await db.createPost({
@@ -116,18 +118,20 @@ export const Editor: React.FC = () => {
           user_id: user.id,
           category_id: selectedCategoryId
         });
+        toast.success('Post published');
         navigate(`/post/${newPost.id}`);
       }
     } catch (error) {
       console.error("Failed to save post", error);
       setError("An error occurred while saving. Please try again.");
+      toast.error("Could not save the post. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-12">
+    <div className="min-h-screen bg-slate-50/90 dark:bg-transparent py-12">
       <div className="container mx-auto px-4 max-w-3xl">
         <button onClick={() => navigate(-1)} className="flex items-center text-slate-500 hover:text-brand-600 mb-6 transition-colors">
           <ArrowLeft size={20} className="mr-2" /> Back
@@ -140,7 +144,7 @@ export const Editor: React.FC = () => {
             </div>
         )}
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 border border-slate-100 dark:border-slate-700">
+        <div className="bg-white/95 dark:bg-slate-800/85 rounded-2xl shadow-xl p-8 border border-slate-100 dark:border-slate-600/70 backdrop-blur">
           <div className="flex justify-between items-center mb-8">
              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
                {id ? 'Edit Post' : 'Create New Post'}

@@ -4,7 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  //darkMode: 'class', // تفعيل الوضع الليلي اليدوي
+  darkMode: 'class', // تفعيل الوضع الليلي اليدوي
   theme: {
     extend: {
       fontFamily: {

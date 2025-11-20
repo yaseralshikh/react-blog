@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { db } from '../services/mockDb';
 import type { User, Post, Category, PostStatus } from '../types';
 import { Shield, Users, FileText, Tag, Trash2, Plus, ChevronDown } from 'lucide-react';
+import { toast } from '../components/Toast';
 
 export const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -47,13 +48,19 @@ export const AdminDashboard: React.FC = () => {
   const handleStatusChange = async (postId: string, newStatus: PostStatus) => {
       await db.updatePost(postId, { status: newStatus });
       loadData();
+      toast.success(`Post marked as ${newStatus}`);
   };
 
   const handleDeleteUser = async (userId: string) => {
-      if(window.confirm("Delete this user? This cannot be undone.")) {
+      toast.confirm("Delete this user? This cannot be undone.", {
+        confirmLabel: 'Delete',
+        cancelLabel: 'Cancel',
+        onConfirm: async () => {
           await db.deleteUser(userId);
           loadData();
-      }
+          toast.success('User removed');
+        }
+      });
   };
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -62,20 +69,26 @@ export const AdminDashboard: React.FC = () => {
           await db.createCategory(newCatName, newCatColor);
           setNewCatName('');
           loadData();
+          toast.success('Category added');
       }
   };
 
   const handleDeleteCategory = async (id: string) => {
-      if(window.confirm("Delete category?")) {
+      toast.confirm("Delete this category?", {
+        confirmLabel: 'Delete',
+        cancelLabel: 'Keep',
+        onConfirm: async () => {
           await db.deleteCategory(id);
           loadData();
-      }
+          toast.success('Category deleted');
+        }
+      });
   };
 
   if (isLoading) return <div className="min-h-screen flex justify-center items-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div></div>;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-12">
+    <div className="min-h-screen bg-slate-50/90 dark:bg-transparent py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex items-center mb-8">
             <div className="bg-brand-600 p-3 rounded-xl mr-4 text-white">
@@ -115,7 +128,7 @@ export const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Content Area */}
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div className="bg-white/95 dark:bg-slate-800/85 rounded-2xl shadow-xl border border-slate-100 dark:border-slate-600/70 overflow-hidden backdrop-blur">
             
             {/* Posts Tab */}
             {activeTab === 'posts' && (
